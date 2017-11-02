@@ -40,16 +40,17 @@ struct Message {
 #define BUFFER_LENGTH 10
 
 // function prototypes
-void Produce(unsigned long start, unsigned long tail, int numberMessages);
-void Consume(unsigned long start, unsigned long tail, int numberMessages);
-void Show(unsigned long start, unsigned long tail, int numberMessages);
+void Produce(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
+void Consume(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
+void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
+
 // Control the entering, sending and displaying of messages in the buffer.
 // Arguments: None
 // Returns: 0 on completion
 int main()
 {
 	Message buffer[BUFFER_LENGTH];   // the message buffer
-	unsigned long buffer_tail = 0;  // position of the tail in the message buffer �
+	unsigned long buffer_tail = 0;  // position of the tail in the message buffer
 									// the next message will be consumed from here
 	unsigned long buffer_length = 0;  // number of messages in the buffer
 	char UserInput;
@@ -104,25 +105,38 @@ int main()
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Produce(Message buffer, unsigned long buffer_tail, int buffer_length)
+void Produce(Message *buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigned long &buffer_length)
 {
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
 
 								// find the element of the buffer in which to store the message
-	<enter code here>
-
+	if (buffer_length < BUFFER_LENGTH)
+	{
+		buffer_head = buffer_length + 1;
+	}
+	else
+	{
+		buffer_head = 0;
+	}
 		// get the value of the data for the message from the user
-		<enter code here>
+	cout << "Please input something: ";
+	cin >> buffer[buffer_head].data;
 
 		// get the value of the time for the message
-		<enter code here>
-
+	buffer[buffer_head].time = time(NULL);
+	
 		// if no buffer overflow has occurred, adjust the buffer length
-		<enter code here>
-
+	if (buffer_length < 10)
+	{
+		buffer_length++;
+	}
+	else
+	{
+		cout << "OH GOD THERES TOO MUCH SHIT IN HERE PANICSIC";
+	}
 		// if a buffer overflow has occurred, display an error statement
-		<enter code here>;
+		//<enter code here>;
 }
 
 
@@ -133,14 +147,27 @@ void Produce(Message buffer, unsigned long buffer_tail, int buffer_length)
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Consume(Message buffer, unsigned long buffer_tail, int buffer_length)
+void Consume(Message *buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigned long &buffer_length)
 {
 	// if the buffer is empty, display an error statement
-	<enter code here>
+	if (buffer_length == 0)
+	{
+		cout << "There aren't any messages to show!";
+	}
+	else			// if the buffer is not empty, display the message at the tail, remove the message by
+	{				// advancing the tail of buffer offset in a circular manner and adjust the buffer length
+		cout << buffer[buffer_tail].data;
+		buffer[buffer_tail].data = NULL;
+		if (buffer_tail < BUFFER_LENGTH)
+		{
+			buffer_tail++;
+		}
+		else
+		{
+			buffer_tail = 0;
+		}
+	}
 
-		// if the buffer is not empty, display the message at the tail, remove the message by
-		// advancing the tail of buffer offset in a circular manner and adjust the buffer length
-		<enter code here>;
 }
 
 
@@ -151,7 +178,7 @@ void Consume(Message buffer, unsigned long buffer_tail, int buffer_length)
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Show(Message buffer, unsigned long buffer_tail, int buffer_length)
+void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length)
 {
 	unsigned long count; // count through the messages being displayed  
 	unsigned long buffer_head;  // the head element of the buffer
@@ -159,15 +186,13 @@ void Show(Message buffer, unsigned long buffer_tail, int buffer_length)
 	// if the buffer is empty, display an error statement
 	if (buffer_length == 0)
 	{
-		cout << "There are no messages to show!";
+		cout << "There aren't any messages to show!";
 	}
 	else // if the buffer is not empty, display all the messages in the buffer
 	{
-		for (int i = 0; i < BUFFER_LENGTH && !buffer[i].data.empty(); i++)
+		for (count = 0; count < BUFFER_LENGTH; count++)
 		{
-			cout << buffer[i].data;
+			cout << buffer[count].data;
 		}
 	}
-		
-		<enter code here>
 }
