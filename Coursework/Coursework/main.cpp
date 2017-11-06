@@ -40,7 +40,7 @@ struct Message {
 #define BUFFER_LENGTH 10
 
 // function prototypes
-void Produce(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
+void Produce(Message * buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigned long buffer_length);
 void Consume(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
 void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
 
@@ -105,26 +105,28 @@ int main()
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Produce(Message *buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigned long &buffer_length)
+void Produce(Message *buffer[BUFFER_LENGTH], unsigned long *buffer_tail, unsigned long &buffer_length)
 {
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
 
 								// find the element of the buffer in which to store the message
-	if (buffer_length < BUFFER_LENGTH)
+	if (*buffer_tail > BUFFER_LENGTH - 1)
 	{
-		buffer_head = buffer_length + 1;
+		*buffer_tail+=
+		buffer_head = *buffer_tail;
 	}
 	else
 	{
-		buffer_head = 0;
+		*buffer_tail = 0;
+		buffer_head = *buffer_tail;
 	}
 		// get the value of the data for the message from the user
 	cout << "Please input something: ";
-	cin >> buffer[buffer_head].data;
+	cin >> buffer[buffer_head]->data;
 
 		// get the value of the time for the message
-	buffer[buffer_head].time = time(NULL);
+	buffer[buffer_head]->time = time(NULL);
 	
 		// if no buffer overflow has occurred, adjust the buffer length
 	if (buffer_length < 10)
@@ -147,7 +149,7 @@ void Produce(Message *buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigne
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Consume(Message *buffer[BUFFER_LENGTH], unsigned long &buffer_tail, unsigned long &buffer_length)
+void Consume(Message &buffer, unsigned long &buffer_tail, unsigned long &buffer_length)
 {
 	// if the buffer is empty, display an error statement
 	if (buffer_length == 0)
