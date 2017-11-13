@@ -112,37 +112,45 @@ void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_
 {
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
-
 								// find the element of the buffer in which to store the message
-	if (*buffer_tail > BUFFER_LENGTH - 1)
+	for (int i = 0; i < BUFFER_LENGTH; i++)
 	{
-		*buffer_tail += 1;
-		buffer_head = *buffer_tail;
+		if (buffer[i].time < 0) // Trying to tell if the program is going through the first time or not, 		
+		{						// if it has then there should be a positive time value left over so i can tell which one to write in
+			buffer_head = i;
+			break;
+		}
 	}
-	else
-	{
-		*buffer_tail = 0;
-		buffer_head = *buffer_tail;
-	}
-		// get the value of the data for the message from the user
+	
+	//if (*buffer_length < BUFFER_LENGTH)
+	//{
+	//	buffer_head = *buffer_length;
+	//}
+	//else
+	//{
+	//	buffer_head = 0;
+	//	//*buffer_tail = 0;
+	//}
+	
+	
+	// get the value of the data for the message from the user
 	cout << "Please input something: ";
 	cin >> buffer[buffer_head].data;
 
-		// get the value of the time for the message
-	buffer[buffer_head].time = time(NULL);
-	
-		// if no buffer overflow has occurred, adjust the buffer length
+	// get the value of the time for the message
+	current_time = time(0);
+	buffer[buffer_head].time = current_time;
+
+	// if no buffer overflow has occurred, adjust the buffer length
 	if (*buffer_length < 10)
 	{
-		*buffer_length+= 1;
+		*buffer_length += 1;
 		cout << *buffer_length;
 	}
-	else
+	else // if a buffer overflow has occurred, display an error statement
 	{
-		cout << "OH GOD THERES TOO MUCH SHIT IN HERE PANICSIC";
+		cout << "The Buffer has overflowed, the oldest data has been overwritten.";
 	}
-		// if a buffer overflow has occurred, display an error statement
-		//<enter code here>;
 }
 
 
@@ -164,13 +172,16 @@ void Consume(struct Message *buffer, unsigned long &buffer_tail, unsigned long &
 	{				// advancing the tail of buffer offset in a circular manner and adjust the buffer length
 		cout << buffer[buffer_tail].data;
 		buffer[buffer_tail].data = NULL;
+		//buffer[buffer_tail].time = time(0); // Shouldn't need this as I should be only giving the values of time when the message is produced
 		if (buffer_tail < BUFFER_LENGTH)
 		{
 			buffer_tail++;
+			buffer_length--;
 		}
 		else
 		{
 			buffer_tail = 0;
+			buffer_length--;
 		}
 	}
 }
