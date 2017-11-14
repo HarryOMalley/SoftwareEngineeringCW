@@ -78,7 +78,7 @@ int main()
 		// act on the user's input
 		switch (UserInput) {
 		case '1':
-			Produce(buffer, &buffer_tail, &buffer_length);
+			Produce(buffer, &buffer_tail, &buffer_length); // cant put an ampersand
 			break;
 
 		case '2':
@@ -113,44 +113,54 @@ void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
 								// find the element of the buffer in which to store the message
-	for (int i = 0; i < BUFFER_LENGTH; i++)
+	//for (int i = 0; i < BUFFER_LENGTH; i++)
+	//{
+	//	if (buffer[i].time < 0) // Trying to tell if the program is going through the first time or not, 		
+	//	{						// if it has then there should be a positive time value left over so i can tell which one to write in
+	//		buffer_head = i;
+	//		break;
+	//	}
+	//} // DONT USE TIME
+	//
+	cout << buffer[0].time;
+
+	if ((*buffer_length + *buffer_tail) < BUFFER_LENGTH)
 	{
-		if (buffer[i].time < 0) // Trying to tell if the program is going through the first time or not, 		
-		{						// if it has then there should be a positive time value left over so i can tell which one to write in
-			buffer_head = i;
-			break;
-		}
+		buffer_head = (*buffer_length) + *buffer_tail;
+
+	}
+	else
+	{
+		buffer_head = *buffer_length + *buffer_tail - (BUFFER_LENGTH);
+		//*buffer_tail = 0;
 	}
 	
-	//if (*buffer_length < BUFFER_LENGTH)
-	//{
-	//	buffer_head = *buffer_length;
-	//}
-	//else
-	//{
-	//	buffer_head = 0;
-	//	//*buffer_tail = 0;
-	//}
-	
+	std::cout << "buffer head: " << buffer_head << endl;
+	std::cout << "buffer length: " << *buffer_length << endl;
+	std::cout << "buffer tail: " << *buffer_tail << endl;
+
+	// if no buffer overflow has occurred, adjust the buffer length
+
+	if ((buffer[buffer_head].time < 0) || (buffer[buffer_head].data == NULL))
+	{
+		*buffer_length += 1;
+		cout << *buffer_length;
+		cout << "no error, buffer length +1";
+	}	
+	else // if a buffer overflow has occurred, display an error statement
+	{
+		cout << "The Buffer has overflowed, the oldest data has been overwritten.";
+		buffer_tail += 1;
+	}
 	
 	// get the value of the data for the message from the user
 	cout << "Please input something: ";
 	cin >> buffer[buffer_head].data;
-
 	// get the value of the time for the message
 	current_time = time(0);
 	buffer[buffer_head].time = current_time;
 
-	// if no buffer overflow has occurred, adjust the buffer length
-	if (*buffer_length < 10)
-	{
-		*buffer_length += 1;
-		cout << *buffer_length;
-	}
-	else // if a buffer overflow has occurred, display an error statement
-	{
-		cout << "The Buffer has overflowed, the oldest data has been overwritten.";
-	}
+
 }
 
 
@@ -196,7 +206,6 @@ void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned lon
 {
 	unsigned long count; // count through the messages being displayed  
 	unsigned long buffer_head;  // the head element of the buffer
-
 	// if the buffer is empty, display an error statement
 	if (buffer_length == 0)
 	{
