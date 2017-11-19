@@ -123,18 +123,40 @@ void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_
 	//} // DONT USE TIME
 	//
 
-
-	if ((*buffer_length + *buffer_tail) < BUFFER_LENGTH)
+	if (*buffer_length < BUFFER_LENGTH)
 	{
-		buffer_head = (*buffer_length) + *buffer_tail;
-
+		if ((*buffer_length + *buffer_tail) < BUFFER_LENGTH)
+		{
+			buffer_head = *buffer_length + *buffer_tail;
+			cout << "We are on the first time around" << endl;
+		}
+		else
+		{
+			buffer_head = *buffer_length + *buffer_tail - BUFFER_LENGTH;
+			cout << "We are going around again" << endl;
+		}
 	}
 	else
 	{
-		buffer_head = *buffer_length + *buffer_tail - (BUFFER_LENGTH);
-		//*buffer_tail = 0;
+		buffer_head = *buffer_length + *buffer_tail - BUFFER_LENGTH;
+		*buffer_tail += 1;
+		cout << "We are overwriting data" << endl;
 	}
-	
+
+
+
+
+	//if ((*buffer_length + *buffer_tail) < BUFFER_LENGTH) // Less than as the maximum entry is 9, not 10 as it starts on 0
+	//{
+	//	buffer_head = *buffer_length + *buffer_tail;
+
+	//}
+	//else
+	//{
+	//	buffer_head = *buffer_length + *buffer_tail - (BUFFER_LENGTH);
+	//	//*buffer_tail = 0;
+	//}
+
 	std::cout << "buffer head: " << buffer_head << endl;
 	std::cout << "buffer length: " << *buffer_length << endl;
 	std::cout << "buffer tail: " << *buffer_tail << endl;
@@ -148,16 +170,14 @@ void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_
 	buffer[buffer_head].time = current_time;
 
 	// if no buffer overflow has occurred, adjust the buffer length
-	if (*buffer_length < 10)
+	if (*buffer_length < BUFFER_LENGTH)
 	{
 		*buffer_length += 1;
 		cout << *buffer_length;
-		
 	}
 	else // if a buffer overflow has occurred, display an error statement
 	{
 		cout << "The Buffer has overflowed, the oldest data has been overwritten.";
-		buffer_tail += 1;
 	}
 }
 
