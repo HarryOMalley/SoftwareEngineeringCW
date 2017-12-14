@@ -40,7 +40,7 @@ struct Message {
 #define BUFFER_LENGTH 10
 
 // function prototypes
-void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_length);
+void Produce(Message *buffer, unsigned long &buffer_tail, unsigned long &buffer_length);
 void Consume(Message *buffer, unsigned long &buffer_tail, unsigned long &buffer_length);
 void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned long buffer_length);
 
@@ -75,7 +75,7 @@ int main()
 		// act on the user's input
 		switch (UserInput) {
 		case '1':
-			Produce(buffer, &buffer_tail, &buffer_length); // cant put an ampersand
+			Produce(buffer, buffer_tail, buffer_length);
 			break;
 
 		case '2':
@@ -103,26 +103,27 @@ int main()
 //   (2) position of the tail of the buffer
 //   (3) number of messages in the buffer
 // Returns: void
-void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_length)
+void Produce(Message *buffer, unsigned long &buffer_tail, unsigned long &buffer_length)
 {
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
-								// find the element of the buffer in which to store the message
-	if (*buffer_length < BUFFER_LENGTH) // Checking whether the buffer is full
+	
+	// find the element of the buffer in which to store the message
+	if (buffer_length < BUFFER_LENGTH) // Checking whether the buffer is full
 	{
-		if ((*buffer_length + *buffer_tail) < BUFFER_LENGTH) // Calculating the head of the buffer, checking whether the buffer has looped back around
+		if ((buffer_length + buffer_tail) < BUFFER_LENGTH)
 		{
-			buffer_head = *buffer_length + *buffer_tail; 
+			buffer_head = buffer_length + buffer_tail; 
 		}
-		else // This happens if the head or tail have looped around to the beginning again
+		else
 		{
-			buffer_head = *buffer_length + *buffer_tail - BUFFER_LENGTH;
+			buffer_head = buffer_length + buffer_tail - BUFFER_LENGTH;
 		}
 	}
-	else // If the buffer is full, then the buffer tail is incremented to overwrite the oldest data
+	else
 	{
-		buffer_head = *buffer_length + *buffer_tail - BUFFER_LENGTH;
-		*buffer_tail += 1;
+		buffer_head = buffer_length + buffer_tail - BUFFER_LENGTH;
+		buffer_tail += 1;
 	}
 	// get the value of the data for the message from the user
 	cout << "Please enter something: ";
@@ -132,9 +133,9 @@ void Produce(Message *buffer, unsigned long *buffer_tail, unsigned long *buffer_
 	current_time = time(0);
 	buffer[buffer_head].time = current_time;
 	// if no buffer overflow has occurred, adjust the buffer length
-	if (*buffer_length < BUFFER_LENGTH)
+	if (buffer_length < BUFFER_LENGTH)
 	{
-		*buffer_length += 1;
+		buffer_length += 1;
 	}
 	else // if a buffer overflow has occurred, display an error statement
 	{
@@ -155,9 +156,11 @@ void Consume(struct Message *buffer, unsigned long &buffer_tail, unsigned long &
 	{
 		cout << "The buffer is empty.";
 	}
-	else			// if the buffer is not empty, display the message at the tail, remove the message by
-	{				// advancing the tail of buffer offset in a circular manner and adjust the buffer length
-		cout << buffer[buffer_tail].data;
+	// if the buffer is not empty, display the message at the tail, remove the message by
+	// advancing the tail of buffer offset in a circular manner and adjust the buffer length
+	if (buffer_length != 0)
+	{
+	cout << buffer[buffer_tail].data;
 		buffer[buffer_tail].data = NULL;
 		if (buffer_tail < BUFFER_LENGTH - 1)
 		{
@@ -186,9 +189,10 @@ void Show(Message buffer[BUFFER_LENGTH], unsigned long buffer_tail, unsigned lon
 	{
 		cout << "The buffer is empty." << endl;
 	}
-	else // if the buffer is not empty, display all the messages in the buffer
+	// if the buffer is not empty, display all the messages in the buffer
+	if (buffer_length != 0)
 	{
-		for (count = 0; count < BUFFER_LENGTH; count++) // Incrementing through the buffer to display all of the messages
+		for (count = 0; count < BUFFER_LENGTH; count++)
 		{
 			cout << buffer[count].data;
 		}
