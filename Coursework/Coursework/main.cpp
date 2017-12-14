@@ -159,7 +159,7 @@ void Consume(struct Message *buffer, unsigned long &buffer_tail, unsigned long &
 	{				// advancing the tail of buffer offset in a circular manner and adjust the buffer length
 		cout << buffer[buffer_tail].data;
 		buffer[buffer_tail].data = NULL;
-		if (buffer_tail < BUFFER_LENGTH)
+		if (buffer_tail < BUFFER_LENGTH - 1)
 		{
 			buffer_tail++;
 			buffer_length--;
