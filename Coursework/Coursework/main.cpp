@@ -107,13 +107,13 @@ void Produce(Message *buffer, unsigned long &buffer_tail, unsigned long &buffer_
 {
 	time_t current_time;
 	unsigned long buffer_head;  // the head of the buffer in which to store the message
-	
+
 	// find the element of the buffer in which to store the message
 	if (buffer_length < BUFFER_LENGTH) // Checking whether the buffer is full
 	{
 		if ((buffer_length + buffer_tail) < BUFFER_LENGTH)
 		{
-			buffer_head = buffer_length + buffer_tail; 
+			buffer_head = buffer_length + buffer_tail;
 		}
 		else
 		{
@@ -160,7 +160,7 @@ void Consume(struct Message *buffer, unsigned long &buffer_tail, unsigned long &
 	// advancing the tail of buffer offset in a circular manner and adjust the buffer length
 	if (buffer_length != 0)
 	{
-	cout << buffer[buffer_tail].data;
+		cout << buffer[buffer_tail].data;
 		buffer[buffer_tail].data = NULL;
 		if (buffer_tail < BUFFER_LENGTH - 1)
 		{
