@@ -8,6 +8,7 @@ Menu::Menu()
 {
 	Data bufferData;
 	while (1) {		// loop until the user wishes to exit
+		char UserInput;
 		// show the menu of options
 		cout << endl;
 		cout << "Buffer Management Menu" << endl;
