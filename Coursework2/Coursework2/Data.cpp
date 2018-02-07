@@ -1,15 +1,17 @@
-#include "stdafx.h"
-#include "Data.h"
 #include <iostream>
+#include "Data.h"
 #include <time.h>
-
+#include "Menu.h"
+#define BUFFER_LENGTH 10
 using namespace std;
+
 
 Data::Data()
 {
-	const int BUFFER_LENGTH = 10;
 	Message buffer[BUFFER_LENGTH];
-
+	//Menu mainMenu;
+	buffer_tail = 0;
+	buffer_length = 0;
 }
 
 
@@ -36,8 +38,8 @@ void Data::Produce()
 	buffer[buffer_head].time = time(&current_time);
 
 	// if no buffer overflow has occurred, adjust the buffer length
-	if (buffer_len < BUFFER_LENGTH) {
-		buffer_len++;
+	if (buffer_length < BUFFER_LENGTH) {
+		buffer_length++;
 	}
 
 	// if a buffer overflow has occurred, display an error statement
@@ -50,7 +52,7 @@ void Data::Produce()
 void Data::Consume()
 {
 	// if the buffer is empty, display an error statement
-	if (buffer_len == 0) {
+	if (buffer_length == 0) {
 		cout << "No messages in the buffer" << endl;
 	}
 
@@ -63,7 +65,7 @@ void Data::Consume()
 		cout << buffer[buffer_tail].data << "\t";
 		cout << ctime(&buffer[buffer_tail].time);
 		buffer_tail = (buffer_tail + 1) % BUFFER_LENGTH;
-		buffer_len--;
+		buffer_length--;
 	}
 }
 
@@ -73,7 +75,7 @@ void Data::Show()
 	unsigned long buffer_head;  // the position at which the next message would be pushed
 
 								// if the buffer is empty, display an error statement
-	if (buffer_len == 0) {
+	if (buffer_length == 0) {
 		cout << "No messages in the buffer" << endl;
 	}
 
@@ -84,9 +86,9 @@ void Data::Show()
 		cout << "Offset Data        Time" << endl;
 
 		// display messages if they are sequential in the array
-		buffer_head = (buffer_tail + buffer_len) % BUFFER_LENGTH;
+		buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
 		if (buffer_tail < buffer_head) {
-			for (count = buffer_tail; count<buffer_head; count++) {
+			for (count = buffer_tail; count < buffer_head; count++) {
 				cout << count << "\t";
 				cout << buffer[count].data << "\t";
 				cout << ctime(&buffer[count].time);
@@ -95,12 +97,12 @@ void Data::Show()
 
 		// display messages if part are at the end of the array and the remainder at the start
 		else {
-			for (count = buffer_tail; count<BUFFER_LENGTH; count++) {
+			for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
 				cout << count << "\t";
 				cout << buffer[count].data << "\t";
 				cout << ctime(&buffer[count].time);
 			}
-			for (count = 0; count<buffer_head; count++) {
+			for (count = 0; count < buffer_head; count++) {
 				cout << count << "\t";
 				cout << buffer[count].data << "\t";
 				cout << ctime(&buffer[count].time);
@@ -116,3 +118,4 @@ void Data::Save()
 void Data::Load()
 {
 }
+
