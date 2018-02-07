@@ -118,4 +118,3 @@ void Data::Save()
 void Data::Load()
 {
 }
-
