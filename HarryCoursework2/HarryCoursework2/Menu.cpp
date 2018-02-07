@@ -9,6 +9,7 @@ Menu::Menu()
 	Data bufferData;
 	while (1) {		// loop until the user wishes to exit
 		char UserInput;
+		std::string fileName;
 		// show the menu of options
 		cout << endl;
 		cout << "Buffer Management Menu" << endl;
@@ -43,6 +44,7 @@ Menu::Menu()
 			cout << "Please enter the filename (without the extension): " << endl;
 			cin >> fileName;
 			bufferData.Save(fileName);
+			cout << "Saved to " << fileName + ".dat" << endl;
 			break;
 
 		case '5':
