@@ -17,8 +17,8 @@ Menu::Menu()
 		cout << "1. Produce a new message for the buffer" << endl;
 		cout << "2. Consume a message from the buffer" << endl;
 		cout << "3. View the contents of the buffer" << endl;
-		cout << "4. Save the contents of the buffer to the disc" << endl;
-		cout << "5. Load messages from the disc to the buffer" << endl;
+		cout << "4. Save the contents of the buffer to the disk" << endl;
+		cout << "5. Load messages from the disk to the buffer" << endl;
 		cout << "6. Exit from the program" << endl << endl;
 
 		// get the user's choice

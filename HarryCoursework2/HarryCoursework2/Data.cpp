@@ -11,7 +11,7 @@ using namespace std;
 
 Data::Data()
 {
-	Message buffer[BUFFER_LENGTH];
+	//Message buffer[BUFFER_LENGTH];
 	buffer_tail = 0;
 	buffer_length = 0;
 }
@@ -119,27 +119,27 @@ void Data::Save(std::string fileName) const
 	unsigned long buffer_head;  // the position at which the next message would be pushed
 	fstream FilePointer;
 	fileName = fileName + ".dat";
-	FilePointer.open(fileName, ios::out | ios::binary);
+	FilePointer.open(fileName, ios::out);
 	buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
 	if (buffer_tail < buffer_head) {
 		for (count = buffer_tail; count < buffer_head; count++) {
-			FilePointer << count << ", ";
-			FilePointer << buffer[count].data << ", ";
-			FilePointer << ctime(&buffer[count].time);
+			FilePointer << count << ",";
+			FilePointer << buffer[count].data << ",";
+			FilePointer << ctime(&buffer[count].time) << ",";
 		}
 	}
 
 	// display messages if part are at the end of the array and the remainder at the start
 	else {
 		for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
-			FilePointer << count << ", ";
-			FilePointer << buffer[count].data << ", ";
-			FilePointer << ctime(&buffer[count].time);
+			FilePointer << count << ",";
+			FilePointer << buffer[count].data << ",";
+			FilePointer << ctime(&buffer[count].time) << ",";
 		}
 		for (count = 0; count < buffer_head; count++) {
-			FilePointer << count << ", ";
-			FilePointer << buffer[count].data << ", ";
-			FilePointer << ctime(&buffer[count].time);
+			FilePointer << count << ",";
+			FilePointer << buffer[count].data << ",";
+			FilePointer << ctime(&buffer[count].time) << ",";
 		}
 	}
 	FilePointer.close();
@@ -150,17 +150,39 @@ void Data::Load(std::string fileName)
 	fstream FilePointer;
 	fileName = fileName + ".dat";
 	// Open the file again, this time for reading
-	FilePointer.open(fileName, ios::in | ios::binary);
+	FilePointer.open(fileName, ios::in);
 	if (!FilePointer.good()) {
 		cout << "FATAL ERROR";
 		exit(1);
 	}
-	int NumberRead;
-	cout << "\nJust opened " << fileName << " for READING ";
-	for (int i = 0; i < 100; i++) {
-		FilePointer >> NumberRead; // Read data
-		cout << NumberRead << " " << endl;
+std:string offset, data, time, bufferData;
+	while (!FilePointer.eof())
+	{
+		std::getline(FilePointer, offset, ',');
+		std::getline(FilePointer, data, ',');
+		std::getline(FilePointer, time, ',');
+		bufferData = offset + "\t" + data + "\t" + time + "\n";
+		cout << "offset: " << offset << "\t";
+		cout << "data: " << data << "\t";
+		cout << "time:" << time << endl;
 	}
+	cout << "\nJust opened " << fileName << " for READING ";
+	//for (int i = 0; i < 100; i++) {
+	//	FilePointer >> NumberRead; // Read data
+	//	cout << NumberRead << " " << endl;
+	//}
 	FilePointer.close(); // finished reading: close the file 
 
 }
+//std::fstream& operator>>(std::fstream& is, Data& d)
+//{
+//	std::string zipcode;
+//	if (std::getline(is, zipcode, ',') &&
+//		std::getline(is, d.city, ',') &&
+//		std::getline(is, d.state))
+//	{
+//		d.zipCode = std::stoi(zipcode);
+//	}
+//
+//	return is;
+//}

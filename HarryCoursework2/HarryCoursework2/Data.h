@@ -1,5 +1,6 @@
 #pragma warning(disable: 4996) // This is to prevent the deprecation warnings to do with ctime
 #include <string>
+#define BUFFER_LENGTH 10
 struct Message {
 	unsigned char data;  // single byte of information to be sent
 	time_t time;  // number of seconds since 1 January 1970
@@ -17,5 +18,5 @@ public:
 private:
 	unsigned long buffer_tail;
 	unsigned long buffer_length;
-	Message buffer[];
+	Message buffer[BUFFER_LENGTH];
 };
