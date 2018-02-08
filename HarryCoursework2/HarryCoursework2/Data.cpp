@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Menu.h"
 #include <fstream>
+#include "string"
 
 #define BUFFER_LENGTH 10
 using namespace std;
@@ -119,13 +120,13 @@ void Data::Save(std::string fileName) const
 	unsigned long buffer_head;  // the position at which the next message would be pushed
 	fstream FilePointer;
 	fileName = fileName + ".dat";
-	FilePointer.open(fileName, ios::out);
+	FilePointer.open(fileName, ios::out | ios::binary);
 	buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
 	if (buffer_tail < buffer_head) {
 		for (count = buffer_tail; count < buffer_head; count++) {
 			FilePointer << count << ",";
 			FilePointer << buffer[count].data << ",";
-			FilePointer << ctime(&buffer[count].time) << ",";
+			FilePointer << ctime(&buffer[count].time);
 		}
 	}
 
@@ -134,12 +135,12 @@ void Data::Save(std::string fileName) const
 		for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
 			FilePointer << count << ",";
 			FilePointer << buffer[count].data << ",";
-			FilePointer << ctime(&buffer[count].time) << ",";
+			FilePointer << ctime(&buffer[count].time);
 		}
 		for (count = 0; count < buffer_head; count++) {
 			FilePointer << count << ",";
 			FilePointer << buffer[count].data << ",";
-			FilePointer << ctime(&buffer[count].time) << ",";
+			FilePointer << ctime(&buffer[count].time);
 		}
 	}
 	FilePointer.close();
@@ -150,7 +151,7 @@ void Data::Load(std::string fileName)
 	fstream FilePointer;
 	fileName = fileName + ".dat";
 	// Open the file again, this time for reading
-	FilePointer.open(fileName, ios::in);
+	FilePointer.open(fileName, ios::in | ios::binary);
 	if (!FilePointer.good()) {
 		cout << "FATAL ERROR";
 		exit(1);
@@ -160,17 +161,16 @@ std:string offset, data, time, bufferData;
 	{
 		std::getline(FilePointer, offset, ',');
 		std::getline(FilePointer, data, ',');
-		std::getline(FilePointer, time, ',');
+		std::getline(FilePointer, time, '\n');
 		bufferData = offset + "\t" + data + "\t" + time + "\n";
-		cout << "offset: " << offset << "\t";
-		cout << "data: " << data << "\t";
-		cout << "time:" << time << endl;
+		if (!offset.length() == 0) // Checking to see if there is a blank line, often found at the end of the file
+		{
+			cout << "offset: " << offset << "\t";
+			cout << "data: " << data << "\t";
+			cout << "time:" << time << endl;
+		}
 	}
 	cout << "\nJust opened " << fileName << " for READING ";
-	//for (int i = 0; i < 100; i++) {
-	//	FilePointer >> NumberRead; // Read data
-	//	cout << NumberRead << " " << endl;
-	//}
 	FilePointer.close(); // finished reading: close the file 
 
 }
