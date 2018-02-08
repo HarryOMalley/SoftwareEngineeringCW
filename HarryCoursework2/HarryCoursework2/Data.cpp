@@ -122,8 +122,8 @@ void Data::Save(std::string fileName) const
 	buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
 	if (buffer_tail < buffer_head) {
 		for (count = buffer_tail; count < buffer_head; count++) {
-			FilePointer << count << "\t";
-			FilePointer << buffer[count].data << "\t";
+			FilePointer << count << ", ";
+			FilePointer << buffer[count].data << ", ";
 			FilePointer << ctime(&buffer[count].time);
 		}
 	}
@@ -131,13 +131,13 @@ void Data::Save(std::string fileName) const
 	// display messages if part are at the end of the array and the remainder at the start
 	else {
 		for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
-			FilePointer << count << "\t";
-			FilePointer << buffer[count].data << "\t";
+			FilePointer << count << ", ";
+			FilePointer << buffer[count].data << ", ";
 			FilePointer << ctime(&buffer[count].time);
 		}
 		for (count = 0; count < buffer_head; count++) {
-			FilePointer << count << "\t";
-			FilePointer << buffer[count].data << "\t";
+			FilePointer << count << ", ";
+			FilePointer << buffer[count].data << ", ";
 			FilePointer << ctime(&buffer[count].time);
 		}
 	}
@@ -146,5 +146,20 @@ void Data::Save(std::string fileName) const
 
 void Data::Load(std::string fileName)
 {
+	fstream FilePointer;
 	fileName = fileName + ".dat";
+	// Open the file again, this time for reading
+	FilePointer.open(fileName, ios::in);
+	if (!FilePointer.good()) {
+		cout << "FATAL ERROR";
+		exit(1);
+	}
+	int NumberRead;
+	cout << "\nJust opened the data file for READING ";
+	for (int i = 0; i < 5; i++) {
+		FilePointer >> NumberRead; // Read data
+		cout << NumberRead << " " << endl;
+	}
+	FilePointer.close(); // finished reading: close the file 
+
 }
