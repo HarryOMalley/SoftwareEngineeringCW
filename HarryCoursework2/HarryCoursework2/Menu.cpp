@@ -52,6 +52,8 @@ Menu::Menu()
 			cin >> fileName;
 			bufferData.Load(fileName);
 			break;
+		case '6':
+			exit(1);
 		default:
 			cout << "Invalid entry" << endl << endl;
 			break;
@@ -60,5 +62,7 @@ Menu::Menu()
 }
 Menu::~Menu()
 {
-
+	//char end;
+	//cout << "Goodbye" << endl;
+	//cin >> end;
 }

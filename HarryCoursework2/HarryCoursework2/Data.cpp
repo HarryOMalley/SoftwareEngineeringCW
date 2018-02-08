@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "Data.h"
 #include <time.h>
 #include "Menu.h"
@@ -149,14 +150,14 @@ void Data::Load(std::string fileName)
 	fstream FilePointer;
 	fileName = fileName + ".dat";
 	// Open the file again, this time for reading
-	FilePointer.open(fileName, ios::in);
+	FilePointer.open(fileName, ios::in | ios::binary);
 	if (!FilePointer.good()) {
 		cout << "FATAL ERROR";
 		exit(1);
 	}
 	int NumberRead;
-	cout << "\nJust opened the data file for READING ";
-	for (int i = 0; i < 5; i++) {
+	cout << "\nJust opened " << fileName << " for READING ";
+	for (int i = 0; i < 100; i++) {
 		FilePointer >> NumberRead; // Read data
 		cout << NumberRead << " " << endl;
 	}
