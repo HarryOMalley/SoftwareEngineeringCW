@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include "Menu.h"
 #include "Data.h"
@@ -50,7 +51,7 @@ Menu::Menu()
 		case '5':
 			cout << "Please enter the filename (without the extension): " << endl;
 			cin >> fileName;
-			bufferData.Load(fileName);
+			fileName >> bufferData;
 			break;
 		case '6':
 			exit(1);
