@@ -45,12 +45,14 @@ void Data::Produce()
 	buffer[buffer_head].time = time(&current_time);
 
 	// If no buffer overflow has occurred, adjust the buffer length
-	if (buffer_length < BUFFER_LENGTH) {
+	if (buffer_length < BUFFER_LENGTH) 
+	{
 		buffer_length++;
 	}
 
 	// If a buffer overflow has occurred, display an error statement
-	else {
+	else 
+	{
 		buffer_tail = (buffer_tail + 1) % BUFFER_LENGTH;
 		cout << "Overflow error" << endl;
 	}
@@ -66,12 +68,14 @@ void Data::Produce()
 void Data::Consume() 
 {
 	// If the buffer is empty, display an error statement
-	if (buffer_length == 0) {
+	if (buffer_length == 0) 
+	{
 		cout << "No messages in the buffer" << endl;
 	}
 	// If the buffer is not empty, display the message at the tail, remove the message by
 	// Advancing the tail of buffer offset in a circular manner and adjust the buffer length
-	else {
+	else 
+	{
 		cout << endl;
 		cout << "Offset Data        Time" << endl;
 		cout << buffer_tail << "\t";
@@ -95,8 +99,8 @@ fstream Data::openFileIn(std::string fileName)
 	fileName = fileName + ".dat"; // Concatenating the filename with the .dat extension
 	fstream filePointer;		  // Creating the file pointer to open the file for reading
 	filePointer.open(fileName, ios::in);
-	if (!filePointer.good()) 
-	{ // Display error and return if file fails to open
+	if (!filePointer.good()) // Display error and return if file fails to open
+	{ 
 		cout << endl << "Error: Could not open file to read!" << endl;
 		cout << "Press enter to exit."; // Allowing time for the user to read the error message
 		cin.ignore();
@@ -119,7 +123,8 @@ fstream Data::openFileOut(std::string fileName)
 	fileName = fileName + ".dat"; // Concatenating the filename with the .dat extension
 	fstream filePointer;		  // Creating the file pointer to open the file for writing
 	filePointer.open(fileName, ios::out);
-	if (!filePointer.good()) {	// Display error and return if file fails to open
+	if (!filePointer.good()) // Display error and return if file fails to open
+	{
 		cout << endl << "Error: Could not open file to write!" << endl;
 		cout << "Press enter to exit.";	// Allowing time for the user to read the error message
 		cin.ignore();
@@ -147,28 +152,34 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 		os << "No messages in the buffer" << endl;
 	}
 	// If the buffer is not empty, display all the messages in the buffer
-	else {
+	else 
+	{
 		// Display a title
 		os << endl;
 		os << "Offset Data        Time" << endl;
 
 		// Display messages if they are sequential in the array
 		buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
-		if (dataClass.buffer_tail < buffer_head) {
-			for (count = dataClass.buffer_tail; count < buffer_head; count++) {
+		if (dataClass.buffer_tail < buffer_head) 
+		{
+			for (count = dataClass.buffer_tail; count < buffer_head; count++) 
+			{
 				os << count << "\t";
 				os << dataClass.buffer[count].data << "\t";
 				os << ctime(&dataClass.buffer[count].time);
 			}
 		}
 		// Display messages if part are at the end of the array and the remainder at the start
-		else {
-			for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
+		else 
+		{
+			for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) 
+			{
 				os << count << "\t";
 				os << dataClass.buffer[count].data << "\t";
 				os << ctime(&dataClass.buffer[count].time);
 			}
-			for (count = 0; count < buffer_head; count++) {
+			for (count = 0; count < buffer_head; count++) 
+			{
 				os << count << "\t";
 				os << dataClass.buffer[count].data << "\t";
 				os << ctime(&dataClass.buffer[count].time);
@@ -201,8 +212,10 @@ fstream& operator<<(std::string fileName, Data & dataClass)
 	unsigned long buffer_head;  // the position at which the next message would be pushed
 	buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
 	// If the buffer hasnt wrapped around, then output normally
-	if (dataClass.buffer_tail < buffer_head) {
-		for (count = dataClass.buffer_tail; count < buffer_head; count++) {
+	if (dataClass.buffer_tail < buffer_head) 
+	{
+		for (count = dataClass.buffer_tail; count < buffer_head; count++) 
+		{
 			// Outputting to the file the various pieces of data
 			filePointer << count << ","; // Outputting all of the data to the file
 			filePointer << dataClass.buffer[count].data << ",";
@@ -213,8 +226,10 @@ fstream& operator<<(std::string fileName, Data & dataClass)
 		}
 	}
 	// If the buffer has wrapped around then output them from start to finish
-	else {
-		for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
+	else 
+	{
+		for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) 
+		{
 			filePointer << count << ","; // Outputting all of the data to the file
 			filePointer << dataClass.buffer[count].data << ",";
 			filePointer << dataClass.buffer_length << ","; // Outputting the values for buffer_length and buffer_tail also, to ensure that this could be restored later
@@ -222,7 +237,8 @@ fstream& operator<<(std::string fileName, Data & dataClass)
 			filePointer << dataClass.buffer[count].time << ",";
 			filePointer << ctime(&dataClass.buffer[count].time);
 		}
-		for (count = 0; count < buffer_head; count++) {
+		for (count = 0; count < buffer_head; count++) 
+		{
 			filePointer << count << ","; // Outputting all of the data to the file
 			filePointer << dataClass.buffer[count].data << ",";
 			filePointer << dataClass.buffer_length << ","; // Outputting the values for buffer_length and buffer_tail also, to ensure that this could be restored later

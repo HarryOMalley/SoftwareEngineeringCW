@@ -10,8 +10,8 @@ class Data
 {
 public:
 	// Function prototypes
-	Data();
-	~Data();
+	Data(); // Constructor
+	~Data(); // Deconstructor
 	void Produce();
 	void Consume();
 	fstream openFileIn(std::string fileName);

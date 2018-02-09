@@ -10,7 +10,8 @@ Menu::Menu()
 {
 	Data bufferData; // Creates an Object of the Data Class, which will create the buffer and functions associated
 	int stop = 0;
-	while (stop != 1) {		// Loop until the user wishes to exit
+	while (stop != 1) // Loop until the user wishes to exit
+	{		
 		// Show the Menu of options
 		cout << endl;
 		cout << "Buffer Management Menu" << endl;
@@ -28,7 +29,8 @@ Menu::Menu()
 		cout << endl;
 
 		// Act on the user's input
-		switch (UserInput) {
+		switch (UserInput) 
+		{
 		case '1':
 			bufferData.Produce(); // Produce function within the Data class
 			break;
