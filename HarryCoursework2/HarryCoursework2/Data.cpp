@@ -99,7 +99,8 @@ fstream Data::openFileIn(std::string fileName)
 	fileName = fileName + ".dat"; // Concatenating the filename with the .dat extension
 	fstream filePointer;		  // Creating the file pointer to open the file for reading
 	filePointer.open(fileName, ios::in);
-	if (!filePointer.good()) // Display error and return if file fails to open
+	// Display error and return if file fails to open
+	if (!filePointer.good()) 
 	{ 
 		cout << endl << "Error: Could not open file to read!" << endl;
 		cout << "Press enter to exit."; // Allowing time for the user to read the error message
@@ -123,7 +124,8 @@ fstream Data::openFileOut(std::string fileName)
 	fileName = fileName + ".dat"; // Concatenating the filename with the .dat extension
 	fstream filePointer;		  // Creating the file pointer to open the file for writing
 	filePointer.open(fileName, ios::out);
-	if (!filePointer.good()) // Display error and return if file fails to open
+	// Display error and return if file fails to open
+	if (!filePointer.good()) 
 	{
 		cout << endl << "Error: Could not open file to write!" << endl;
 		cout << "Press enter to exit.";	// Allowing time for the user to read the error message
@@ -199,7 +201,8 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 // If this was not done, instead you could calculate the position of the buffer_tail and the buffer_length with the offset and number of data entries.
 fstream& operator<<(std::string fileName, Data & dataClass)
 {
-	if (dataClass.buffer_length == 0) // Checking to make sure that there are messages to save, otherwise it will cause an access violation
+	// Checking to make sure that there are messages to save, otherwise it will cause an access violation
+	if (dataClass.buffer_length == 0) 
 	{
 		cout << endl << "Error: No messages to save!" << endl;
 		cout << "Press enter to exit.";	// Allowing time for the user to read the error message
