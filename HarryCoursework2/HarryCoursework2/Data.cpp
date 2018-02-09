@@ -172,7 +172,8 @@ fstream& operator>>(std::string fileName, Data & dataClass)
 		exit(1);
 	}
 	std::string offset, data, time, unixTime, buffer_length, buffer_tail; // The variables used to read from the file
-	int intOffset, intData, intUnixTime; // The variables used 
+	int intOffset, intUnixTime; // The variables used 
+	char charData;
 	unsigned long count = 0; // count through the messages being displayed
 	unsigned long buffer_head;	// the position at which the next message would be pushed
 	unsigned long intbuffer_length;
@@ -190,11 +191,11 @@ fstream& operator>>(std::string fileName, Data & dataClass)
 			cout << "offset: " << offset << "\t";
 			cout << "data: " << data << "\t";
 			cout << "time:" << time << endl;
-			intData = atoi(data.c_str());
+			charData = data[0]; // Converting the string to a char by taking the first (and only) character in the string
 			intbuffer_length = atoi(buffer_length.c_str());
 			intbuffer_tail = atoi(buffer_tail.c_str());
 			intUnixTime = atoi(unixTime.c_str());
-			dataClass.buffer[count].data = intData;
+			dataClass.buffer[count].data = charData;
 			dataClass.buffer[count].time = intUnixTime;	
 			dataClass.buffer_length = intbuffer_length;
 			dataClass.buffer_tail = intbuffer_tail;
