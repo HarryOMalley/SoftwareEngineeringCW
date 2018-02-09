@@ -156,9 +156,53 @@ void Data::Save(std::string fileName) const
 	FilePointer.close();
 }
 
-fstream& operator<<(fstream & output, Data & dataClass)
+fstream& operator<<(std::string fileName, Data & dataClass)
 {
-	return output;
+	fileName = fileName + ".dat";
+	// Open the file again, this time for reading
+	fstream filePointer;
+	filePointer.open(fileName, ios::out);;
+	if (!filePointer.good()) {
+		cout << "FATAL ERROR";
+		exit(1);
+	}
+	unsigned long count; // count through the messages being displayed
+	unsigned long buffer_head;  // the position at which the next message would be pushed
+	buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
+	if (dataClass.buffer_tail < buffer_head) {
+		for (count = dataClass.buffer_tail; count < buffer_head; count++) {
+			filePointer << count << ",";
+			filePointer << dataClass.buffer[count].data << ",";
+			filePointer << dataClass.buffer_length << ",";
+			filePointer << dataClass.buffer_tail << ",";
+			filePointer << dataClass.buffer[count].time << ",";
+			filePointer << ctime(&dataClass.buffer[count].time);
+		}
+	}
+
+	// display messages if part are at the end of the array and the remainder at the start
+	else {
+		for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
+			filePointer << count << ",";
+			filePointer << dataClass.buffer[count].data << ",";
+			filePointer << dataClass.buffer_length << ",";
+			filePointer << dataClass.buffer_tail << ",";
+			filePointer << dataClass.buffer[count].time << ",";
+			filePointer << ctime(&dataClass.buffer[count].time);
+
+		}
+		for (count = 0; count < buffer_head; count++) {
+			filePointer << count << ",";
+			filePointer << dataClass.buffer[count].data << ",";
+			filePointer << dataClass.buffer_length << ",";
+			filePointer << dataClass.buffer_tail << ",";
+			filePointer << dataClass.buffer[count].time << ",";
+			filePointer << ctime(&dataClass.buffer[count].time);
+		}
+	}
+	filePointer.close();
+
+	return filePointer;
 }
 
 fstream& operator>>(std::string fileName, Data & dataClass)

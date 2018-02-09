@@ -44,7 +44,8 @@ Menu::Menu()
 		case '4':
 			cout << "Please enter the filename (without the extension): " << endl;
 			cin >> fileName;
-			bufferData.Save(fileName);
+			fileName << bufferData;
+			//bufferData.Save(fileName);
 			cout << "Saved to " << fileName + ".dat" << endl;
 			break;
 

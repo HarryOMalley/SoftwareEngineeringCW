@@ -15,7 +15,7 @@ public:
 	void Consume();
 	void Show() const;
 	void Save(std::string fileName) const;
-	friend fstream& operator<<(fstream& output, Data& data);
+	friend fstream& operator<<(std::string fileName, Data& data);
 	friend fstream& operator>>(std::string fileName, Data& data);
 private:
 	unsigned long buffer_tail;
