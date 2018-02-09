@@ -13,7 +13,8 @@ public:
 	~Data();
 	void Produce();
 	void Consume();
-	void Show() const;
+	fstream openFileIn(std::string fileName);
+	fstream openFileOut(std::string fileName);
 	friend ostream& operator<<(ostream& os, const Data& dataClass);
 	friend fstream& operator<<(std::string fileName, Data& dataClass);
 	friend fstream& operator>>(std::string fileName, Data& dataClass);

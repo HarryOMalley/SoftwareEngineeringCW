@@ -52,9 +52,11 @@ Menu::Menu()
 			cin >> fileName;
 			fileName >> bufferData;
 			break;
+
 		case '6':
 			stop = 1;
 			break;
+
 		default:
 			cout << "Invalid entry" << endl << endl;
 			break;

@@ -14,7 +14,6 @@ Data::Data()
 	buffer_length = 0;
 }
 
-
 Data::~Data()
 {
 }
@@ -69,54 +68,36 @@ void Data::Consume()
 	}
 }
 
-void Data::Show() const
+fstream Data::openFileIn(std::string fileName)
 {
-	unsigned long count; // count through the messages being displayed
-	unsigned long buffer_head;  // the position at which the next message would be pushed
-
-								// if the buffer is empty, display an error statement
-	if (buffer_length == 0) {
-		cout << "No messages in the buffer" << endl;
+	fileName = fileName + ".dat";
+	fstream filePointer;
+	filePointer.open(fileName, ios::in);
+	if (!filePointer.good()) {
+		cout << "FATAL ERROR";
+		exit(1);
 	}
+	return filePointer;
+}
 
-	// if the buffer is not empty, display all the messages in the buffer
-	else {
-		// display a title
-		cout << endl;
-		cout << "Offset Data        Time" << endl;
-
-		// display messages if they are sequential in the array
-		buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
-		if (buffer_tail < buffer_head) {
-			for (count = buffer_tail; count < buffer_head; count++) {
-				cout << count << "\t";
-				cout << buffer[count].data << "\t";
-				cout << ctime(&buffer[count].time);
-			}
-		}
-
-		// display messages if part are at the end of the array and the remainder at the start
-		else {
-			for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
-				cout << count << "\t";
-				cout << buffer[count].data << "\t";
-				cout << ctime(&buffer[count].time);
-			}
-			for (count = 0; count < buffer_head; count++) {
-				cout << count << "\t";
-				cout << buffer[count].data << "\t";
-				cout << ctime(&buffer[count].time);
-			}
-		}
+fstream Data::openFileOut(std::string fileName)
+{
+	fileName = fileName + ".dat";
+	fstream filePointer;
+	filePointer.open(fileName, ios::out);
+	if (!filePointer.good()) {
+		cout << "FATAL ERROR";
+		exit(1);
 	}
+	return filePointer;
 }
 
 ostream & operator<<(ostream & os, const Data & dataClass)
 {
-	unsigned long count; // count through the messages being displayed
+	unsigned long count = 0; // count through the messages being displayed
 	unsigned long buffer_head;  // the position at which the next message would be pushed
 
-								// if the buffer is empty, display an error statement
+	// if the buffer is empty, display an error statement
 	if (dataClass.buffer_length == 0) {
 		cout << "No messages in the buffer" << endl;
 	}
@@ -156,29 +137,24 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 
 fstream& operator<<(std::string fileName, Data & dataClass)
 {
-	fileName = fileName + ".dat";
-	// Open the file again, this time for reading
-	fstream filePointer;
-	filePointer.open(fileName, ios::out);;
-	if (!filePointer.good()) {
-		cout << "FATAL ERROR";
-		exit(1);
-	}
+	fstream filePointer = dataClass.openFileOut(fileName);
 	unsigned long count; // count through the messages being displayed
 	unsigned long buffer_head;  // the position at which the next message would be pushed
+	
 	buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
+	
 	if (dataClass.buffer_tail < buffer_head) {
 		for (count = dataClass.buffer_tail; count < buffer_head; count++) {
+			// Outputting to the file the various pieces of data
 			filePointer << count << ",";
 			filePointer << dataClass.buffer[count].data << ",";
-			filePointer << dataClass.buffer_length << ",";
+			filePointer << dataClass.buffer_length << ","; // Outputting the values for buffer_length and buffer_tail also, to ensure that this could be restored later
 			filePointer << dataClass.buffer_tail << ",";
 			filePointer << dataClass.buffer[count].time << ",";
 			filePointer << ctime(&dataClass.buffer[count].time);
 		}
 	}
-
-	// display messages if part are at the end of the array and the remainder at the start
+	// Display messages if part are at the end of the array and the remainder at the start
 	else {
 		for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
 			filePointer << count << ",";
@@ -199,27 +175,16 @@ fstream& operator<<(std::string fileName, Data & dataClass)
 		}
 	}
 	filePointer.close();
-
 	return filePointer;
 }
 
 fstream& operator>>(std::string fileName, Data & dataClass)
 {
-	fileName = fileName + ".dat";
-	// Open the file again, this time for reading
-	fstream filePointer;
-	filePointer.open(fileName, ios::in);
-	if (!filePointer.good()) {
-		cout << "FATAL ERROR";
-		exit(1);
-	}
+	fstream filePointer = dataClass.openFileIn(fileName);
+
 	std::string offset, data, time, unixTime, buffer_length, buffer_tail; // The variables used to read from the file
-	int intOffset, intUnixTime; // The variables used 
-	char charData;
-	unsigned long count = 0; // count through the messages being displayed
-	unsigned long buffer_head;	// the position at which the next message would be pushed
-	unsigned long intbuffer_length;
-	unsigned long intbuffer_tail;
+	int count = 0; // count through the messages being displayed
+	cout << "Read the Data from " + fileName << endl;
 	while (!filePointer.eof()) // Looping through all of the data in the file
 	{
 		std::getline(filePointer, offset, ','); // Getting the lines, splitting with a delimeter (which is the comma used in the saving process)
@@ -228,23 +193,21 @@ fstream& operator>>(std::string fileName, Data & dataClass)
 		std::getline(filePointer, buffer_tail, ',');
 		std::getline(filePointer, unixTime, ',');
 		std::getline(filePointer, time, '\n');
+		
 		if (!offset.length() == 0) // Checking to see if there is a blank line, often found at the end of the file
 		{
-			cout << "offset: " << offset << "\t";
-			cout << "data: " << data << "\t";
-			cout << "time:" << time << endl;
-			charData = data[0]; // Converting the string to a char by taking the first (and only) character in the string
-			intbuffer_length = atoi(buffer_length.c_str());
-			intbuffer_tail = atoi(buffer_tail.c_str());
-			intUnixTime = atoi(unixTime.c_str());
-			dataClass.buffer[count].data = charData;
-			dataClass.buffer[count].time = intUnixTime;	
-			dataClass.buffer_length = intbuffer_length;
-			dataClass.buffer_tail = intbuffer_tail;
-		}			
+			
+			cout << "Offset: \t" << offset << "\t";
+			cout << "Data: \t" << data << "\t";
+			cout << "Time: \t" << time << endl;
+
+			dataClass.buffer[atoi(offset.c_str())].data = data[0]; // Converting the string to a char by taking the first (and only) character in the string
+			dataClass.buffer[atoi(offset.c_str())].time = atoi(unixTime.c_str());
+			dataClass.buffer_length = atoi(buffer_length.c_str());
+			dataClass.buffer_tail = atoi(buffer_tail.c_str());
+		}
 		count++;
 	}
-
-	filePointer.close(); // finished reading: close the file 
+	filePointer.close(); // Finished reading: close the file 
 	return filePointer;
 }
