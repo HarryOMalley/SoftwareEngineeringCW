@@ -68,7 +68,7 @@ void Data::Consume()
 	}
 }
 
-fstream Data::openFileIn(std::string fileName)
+fstream Data::openFileIn(std::string fileName) // Function to open a file as an input
 {
 	fileName = fileName + ".dat";
 	fstream filePointer;
@@ -80,7 +80,7 @@ fstream Data::openFileIn(std::string fileName)
 	return filePointer;
 }
 
-fstream Data::openFileOut(std::string fileName)
+fstream Data::openFileOut(std::string fileName) // Function to open a file as an output
 {
 	fileName = fileName + ".dat";
 	fstream filePointer;
@@ -92,7 +92,7 @@ fstream Data::openFileOut(std::string fileName)
 	return filePointer;
 }
 
-ostream & operator<<(ostream & os, const Data & dataClass)
+ostream & operator<<(ostream & os, const Data & dataClass) 
 {
 	unsigned long count = 0; // count through the messages being displayed
 	unsigned long buffer_head;  // the position at which the next message would be pushed
@@ -104,11 +104,11 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 
 	// if the buffer is not empty, display all the messages in the buffer
 	else {
-		// display a title
+		// Display a title
 		cout << endl;
 		cout << "Offset Data        Time" << endl;
 
-		// display messages if they are sequential in the array
+		// Display messages if they are sequential in the array
 		buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
 		if (dataClass.buffer_tail < buffer_head) {
 			for (count = dataClass.buffer_tail; count < buffer_head; count++) {
@@ -118,7 +118,7 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 			}
 		}
 
-		// display messages if part are at the end of the array and the remainder at the start
+		// Display messages if part are at the end of the array and the remainder at the start
 		else {
 			for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
 				cout << count << "\t";
