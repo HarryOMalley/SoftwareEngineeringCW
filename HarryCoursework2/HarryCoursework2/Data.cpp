@@ -17,7 +17,14 @@ Data::~Data() // Deconstructor
 	cout << "Deconstructing the Data Object..." << endl; // Message to say the Object is being deconstructed
 }
 
-// Produce Function to input Data
+// Create a new message and add it to the head of the buffer.
+// The data for the message is obtained from the user and a time stamp is obtained from the
+// time() function in the C standard library. 
+// Arguments:
+//   (1) start of the buffer
+//   (2) position of the tail of the buffer
+//   (3) number of messages in the buffer
+// Returns: void
 // This function hasn't changed since Task 1, instead being held within a class
 void Data::Produce() 
 {
@@ -49,7 +56,12 @@ void Data::Produce()
 	}
 }
 
-// Consume function to Show and Delete Data from the buffer
+// Pop the message at the head of the buffer and display it.
+// Arguments:
+//   (1) start of the buffer
+//   (2) position of the tail of the buffer
+//   (3) number of messages in the buffer
+// Returns: void
 // This function hasn't changed since Task 1, instead being held within a class
 void Data::Consume() 
 {
@@ -71,7 +83,8 @@ void Data::Consume()
 }
 
 // Function to open a file as an input
-// Takes the file name as a string as an argument
+// Arguments:
+//		(1) Name of the file to open as input
 // Returns the filePointer if it opens correctly, otherwise it will exit the program
 // Due to the data types of the functions, it is not possible to return back to the menu if the file does not open properly
 // It would require changing the data types of the functions, it is easier to exit the program if the file does not open properly
@@ -94,7 +107,8 @@ fstream Data::openFileIn(std::string fileName)
 }
 
 // Function to open a file as an output
-// Takes the file name as a string as an argument
+// Arguments:
+//		(1) Name of the file to open as output
 // Returns the filePointer if it opens correctly, otherwise it will exit the program
 // Due to the data types of the functions, it is not possible to return back to the menu if the file does not open properly
 // It would require changing the data types of the functions, it is easier to exit the program if the file does not open properly
@@ -116,6 +130,9 @@ fstream Data::openFileOut(std::string fileName)
 }
 
 // Overloaded << operator to be able to use cout directly with the bufferClass to output the data from buffer
+// Arguments:
+//		(1) ostream os
+//		(2) Data Object
 // Takes two arguments, the cout ostream function and the dataClass which it will extract the relevant information from
 // Returns the os which will output the information that was written to it in this function
 // The function itself is largely the same as the show function from task 1, instead being used with the overloaded << operator
@@ -162,6 +179,9 @@ ostream & operator<<(ostream & os, const Data & dataClass)
 }
 
 // Overloaded << operator used to save the dataClass buffer to file
+// Arguments:
+//		(1) Name of the file to save to as a string
+//		(2) Data Object
 // Takes two arguments, the file name and the dataClass. The file name is then concatenated with the extension (.dat) and the file is opened with the openFileOut function
 // Returns the filePointer
 // The values of buffer_length and buffer_tail are outputted also. Considering that it does not take up that much extra storage it is worthwhile to make it simpler to import it again when loading
@@ -215,7 +235,10 @@ fstream& operator<<(std::string fileName, Data & dataClass)
 	return filePointer;
 }
 
-// Overlaoded >> operator to load from a file into the buffer
+// Overloaded >> operator to load from a file into the buffer
+// Arguments:
+//		(1) Name of the file to read from as a string
+//		(2) Data Object
 // Takes two operators, the file name and the dataClass, to which the data will be stored into the buffer.
 // The file is opened by the openFileIn function using the file name which is concatenated with the extension (.dat)
 // By using filePointer.eof(), the file can be read until the program gets to the end. 

@@ -5,7 +5,7 @@
 #include "Menu.h"
 #include "Data.h"
 using namespace std;
-
+// Constructor which acts as the main menu, loops around until the user wishes to end, in which case the deconstructor is called for both the Data Class and the Menu Class
 Menu::Menu()
 {
 	Data bufferData; // Creates an Object of the Data Class, which will create the buffer and functions associated
@@ -65,9 +65,11 @@ Menu::Menu()
 		}
 	}
 }
+// Deconstructor
+// Says goodbye and waits for the user to press enter to prevent the console from closing immediately
 Menu::~Menu()
 {
-	cout << "Press enter to exit.";
+	cout << endl << endl << "Goodbye." << endl << "Press enter to exit." << endl;
 	cin.ignore();
 	cin.get();
 }
