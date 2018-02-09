@@ -2,7 +2,8 @@
 #include <string>
 using namespace std;
 #define BUFFER_LENGTH 10
-struct Message {
+struct Message 
+{
 	unsigned char data;  // single byte of information to be sent
 	time_t time;  // number of seconds since 1 January 1970
 };
