@@ -7,11 +7,10 @@ using namespace std;
 
 Menu::Menu()
 {
-	Data bufferData;
-	while (1) {		// loop until the user wishes to exit
-		char UserInput;
-		std::string fileName;
-		// show the menu of options
+	Data bufferData; // Creates an Object of the Data Class, which will create the buffer and functions associated
+	int stop = 0;
+	while (stop != 1) {		// Loop until the user wishes to exit
+		// Show the Menu of options
 		cout << endl;
 		cout << "Buffer Management Menu" << endl;
 		cout << "----------------------" << endl;
@@ -22,30 +21,29 @@ Menu::Menu()
 		cout << "5. Load messages from the disk to the buffer" << endl;
 		cout << "6. Exit from the program" << endl << endl;
 
-		// get the user's choice
+		// Get the user's choice
 		cout << "Enter your option: ";
 		cin >> UserInput;
 		cout << endl;
 
-		// act on the user's input
+		// Act on the user's input
 		switch (UserInput) {
 		case '1':
-			bufferData.Produce();
+			bufferData.Produce(); // Produce function within the Data class
 			break;
 
 		case '2':
-			bufferData.Consume();
+			bufferData.Consume(); // Consume function within the Data class
 			break;
 
 		case '3':
-			bufferData.Show();
+			cout << bufferData; // Overloaded << operator in the Data class to do this
 			break;
 
 		case '4':
 			cout << "Please enter the filename (without the extension): " << endl;
 			cin >> fileName;
 			fileName << bufferData;
-			//bufferData.Save(fileName);
 			cout << "Saved to " << fileName + ".dat" << endl;
 			break;
 
@@ -55,7 +53,8 @@ Menu::Menu()
 			fileName >> bufferData;
 			break;
 		case '6':
-			exit(1);
+			stop = 1;
+			break;
 		default:
 			cout << "Invalid entry" << endl << endl;
 			break;
@@ -64,7 +63,6 @@ Menu::Menu()
 }
 Menu::~Menu()
 {
-	//char end;
-	//cout << "Goodbye" << endl;
-	//cin >> end;
+	cout << "Goodbye" << endl;
+	cin >> UserInput;
 }

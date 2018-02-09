@@ -3,11 +3,10 @@
 class Menu
 {
 public:
-	Menu(); // Will run the while loop to loop the loop
+	Menu(); // Constructor which will loop around the main function
 	~Menu();
 private:
 	char UserInput;
 	std::string fileName;
-	//Data bufferData;
 };
 

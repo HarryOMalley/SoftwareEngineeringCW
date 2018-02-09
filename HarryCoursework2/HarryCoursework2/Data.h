@@ -14,9 +14,9 @@ public:
 	void Produce();
 	void Consume();
 	void Show() const;
-	void Save(std::string fileName) const;
-	friend fstream& operator<<(std::string fileName, Data& data);
-	friend fstream& operator>>(std::string fileName, Data& data);
+	friend ostream& operator<<(ostream& os, const Data& dataClass);
+	friend fstream& operator<<(std::string fileName, Data& dataClass);
+	friend fstream& operator>>(std::string fileName, Data& dataClass);
 private:
 	unsigned long buffer_tail;
 	unsigned long buffer_length;

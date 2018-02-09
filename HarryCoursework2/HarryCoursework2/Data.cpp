@@ -5,14 +5,11 @@
 #include "Data.h"
 #include "string"
 
-
 #define BUFFER_LENGTH 10
 using namespace std;
 
-
 Data::Data()
 {
-	//Message buffer[BUFFER_LENGTH];
 	buffer_tail = 0;
 	buffer_length = 0;
 }
@@ -114,46 +111,47 @@ void Data::Show() const
 	}
 }
 
-void Data::Save(std::string fileName) const
+ostream & operator<<(ostream & os, const Data & dataClass)
 {
 	unsigned long count; // count through the messages being displayed
 	unsigned long buffer_head;  // the position at which the next message would be pushed
-	fstream FilePointer;
-	fileName = fileName + ".dat";
-	FilePointer.open(fileName, ios::out);
-	buffer_head = (buffer_tail + buffer_length) % BUFFER_LENGTH;
-	if (buffer_tail < buffer_head) {
-		for (count = buffer_tail; count < buffer_head; count++) {
-			FilePointer << count << ",";
-			FilePointer << buffer[count].data << ",";
-			FilePointer << buffer_length << ",";
-			FilePointer << buffer_tail << ",";
-			FilePointer << buffer[count].time << ",";
-			FilePointer << ctime(&buffer[count].time);
-		}
+
+								// if the buffer is empty, display an error statement
+	if (dataClass.buffer_length == 0) {
+		cout << "No messages in the buffer" << endl;
 	}
 
-	// display messages if part are at the end of the array and the remainder at the start
+	// if the buffer is not empty, display all the messages in the buffer
 	else {
-		for (count = buffer_tail; count < BUFFER_LENGTH; count++) {
-			FilePointer << count << ",";
-			FilePointer << buffer[count].data << ",";
-			FilePointer << buffer_length << ",";
-			FilePointer << buffer_tail << ",";
-			FilePointer << buffer[count].time << ",";
-			FilePointer << ctime(&buffer[count].time);
+		// display a title
+		cout << endl;
+		cout << "Offset Data        Time" << endl;
 
+		// display messages if they are sequential in the array
+		buffer_head = (dataClass.buffer_tail + dataClass.buffer_length) % BUFFER_LENGTH;
+		if (dataClass.buffer_tail < buffer_head) {
+			for (count = dataClass.buffer_tail; count < buffer_head; count++) {
+				cout << count << "\t";
+				cout << dataClass.buffer[count].data << "\t";
+				cout << ctime(&dataClass.buffer[count].time);
+			}
 		}
-		for (count = 0; count < buffer_head; count++) {
-			FilePointer << count << ",";
-			FilePointer << buffer[count].data << ",";
-			FilePointer << buffer_length << ",";
-			FilePointer << buffer_tail << ",";
-			FilePointer << buffer[count].time << ",";
-			FilePointer << ctime(&buffer[count].time);
+
+		// display messages if part are at the end of the array and the remainder at the start
+		else {
+			for (count = dataClass.buffer_tail; count < BUFFER_LENGTH; count++) {
+				cout << count << "\t";
+				cout << dataClass.buffer[count].data << "\t";
+				cout << ctime(&dataClass.buffer[count].time);
+			}
+			for (count = 0; count < buffer_head; count++) {
+				cout << count << "\t";
+				cout << dataClass.buffer[count].data << "\t";
+				cout << ctime(&dataClass.buffer[count].time);
+			}
 		}
 	}
-	FilePointer.close();
+	return os;
 }
 
 fstream& operator<<(std::string fileName, Data & dataClass)
