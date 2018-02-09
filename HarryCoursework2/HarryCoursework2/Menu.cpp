@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include <stdio.h>
 #include "Menu.h"
 #include "Data.h"
 using namespace std;
@@ -41,20 +42,21 @@ Menu::Menu()
 			break;
 
 		case '4':
-			cout << "Please enter the filename (without the extension): " << endl;
+			cout << "Please enter the filename (without the extension): " << endl; // Getting the name of the file to write to
 			cin >> fileName;
-			fileName << bufferData;
+			fileName << bufferData; // Using the overloaded operator to write to the file
 			cout << "Saved to " << fileName + ".dat" << endl;
 			break;
 
 		case '5':
-			cout << "Please enter the filename (without the extension): " << endl;
+			cout << "Please enter the filename (without the extension): " << endl; // Getting the name of the file to read from
 			cin >> fileName;
-			fileName >> bufferData;
+			fileName >> bufferData; // Using the overloaded operator to read from the file
+			cout << "Read the Data from " + fileName + ".dat" << endl;
 			break;
 
 		case '6':
-			stop = 1;
+			stop = 1; 
 			break;
 
 		default:
@@ -65,6 +67,7 @@ Menu::Menu()
 }
 Menu::~Menu()
 {
-	cout << "Goodbye" << endl;
-	cin >> UserInput;
+	cout << "Press enter to exit.";
+	cin.ignore();
+	cin.get();
 }
